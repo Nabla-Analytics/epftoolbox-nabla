@@ -853,9 +853,9 @@ def _build_and_split_XYs(dfTrain, features, shuffle_train, n_exogenous_inputs, d
 
     for n_ex in range(1, n_exogenous_inputs + 1):
 
-        n_features += 24 * features['In: Exog-' + str(n_ex) + ' D'] + \
-                     24 * features['In: Exog-' + str(n_ex) + ' D-1'] + \
-                     24 * features['In: Exog-' + str(n_ex) + ' D-7']
+        n_features += 24 * features['In: Exog-' + str(n_ex) + ' D']  # + \
+                     # 24 * features['In: Exog-' + str(n_ex) + ' D-1'] + \
+                     # 24 * features['In: Exog-' + str(n_ex) + ' D-7']
 
     # Extracting the predicted dates for testing and training. We leave the first week of data
     # out of the prediction as we the maximum lag can be one week
@@ -930,20 +930,20 @@ def _build_and_split_XYs(dfTrain, features, shuffle_train, n_exogenous_inputs, d
     # For each possible horizon
     for hour in range(24):
         # For each possible past day where exogeneous can be included
-        for past_day in [1, 7]:
-
-            # We define the corresponding past time indexs 
-            pastIndexTrain = pd.to_datetime(indexTrain.loc[:, 'h' + str(hour)].values) - \
-                pd.Timedelta(hours=24 * past_day)
-            pastIndexTest = pd.to_datetime(indexTest.loc[:, 'h' + str(hour)].values) - \
-                pd.Timedelta(hours=24 * past_day)
-
-            # For each of the exogenous inputs we include feature if feature selection indicates it
-            for exog in range(1, n_exogenous_inputs + 1):
-                if features['In: Exog-' + str(exog) + ' D-' + str(past_day)]:
-                    Xtrain[:, indexFeatures] = dfTrain.loc[pastIndexTrain, 'Exogenous ' + str(exog)]                    
-                    Xtest[:, indexFeatures] = dfTest.loc[pastIndexTest, 'Exogenous ' + str(exog)]
-                    indexFeatures += 1
+        # for past_day in [1, 7]:
+        #
+        #     # We define the corresponding past time indexs
+        #     pastIndexTrain = pd.to_datetime(indexTrain.loc[:, 'h' + str(hour)].values) - \
+        #         pd.Timedelta(hours=24 * past_day)
+        #     pastIndexTest = pd.to_datetime(indexTest.loc[:, 'h' + str(hour)].values) - \
+        #         pd.Timedelta(hours=24 * past_day)
+        #
+        #     # For each of the exogenous inputs we include feature if feature selection indicates it
+        #     for exog in range(1, n_exogenous_inputs + 1):
+        #         if features['In: Exog-' + str(exog) + ' D-' + str(past_day)]:
+        #             Xtrain[:, indexFeatures] = dfTrain.loc[pastIndexTrain, 'Exogenous ' + str(exog)]
+        #             Xtest[:, indexFeatures] = dfTest.loc[pastIndexTest, 'Exogenous ' + str(exog)]
+        #             indexFeatures += 1
 
         # For each of the exogenous inputs we include feature if feature selection indicates it
         for exog in range(1, n_exogenous_inputs + 1):
