@@ -129,8 +129,15 @@ def _hyperopt_objective(hyperparameters, trials, trials_file_path, max_evals, nl
     # Re-defining the training dataset based on the calibration window. The calibration window
     # can be given as an external parameter. If the value 0 is given, the calibration window
     # is included as a hyperparameter to optimize
-    dfTrain_cw = dfTrain.loc[dfTrain.index[-1] - pd.Timedelta(weeks=52) * calibration_window +
-                             pd.Timedelta(hours=1):]
+    if dfTrain.index.inferred_freq == '30T':
+        dfTrain_cw = dfTrain.loc[dfTrain.index[-1] - pd.Timedelta(weeks=52) * calibration_window +
+                             pd.Timedelta(30,unit='Min'):]
+        outputshape = 48
+    else:
+        dfTrain_cw = dfTrain.loc[dfTrain.index[-1] - pd.Timedelta(weeks=52) * calibration_window +
+                                 pd.Timedelta(hours=1):]
+        outputshape = 24
+
 
     # Saving hyperoptimization state and printing message
     pc.dump(trials, open(trials_file_path, "wb"))
@@ -171,7 +178,7 @@ def _hyperopt_objective(hyperparameters, trials, trials_file_path, max_evals, nl
     np.random.seed(int(hyperparameters['seed']))
 
     # Initialize model
-    forecaster = DNNModel(neurons=neurons, n_features=Xtrain.shape[-1], 
+    forecaster = DNNModel(neurons=neurons, n_features=Xtrain.shape[-1], outputShape=outputshape,
                      dropout=hyperparameters['dropout'], batch_normalization=hyperparameters['batch_normalization'], 
                      lr=hyperparameters['lr'], verbose=False,
                      optimizer='adam', activation=hyperparameters['activation'],
