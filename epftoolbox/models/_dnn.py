@@ -912,7 +912,7 @@ def _build_and_split_XYs(dfTrain, features, shuffle_train, n_exogenous_inputs, d
     # For each possible horizon
     for hour in range(24):
         # For each possible past day where prices can be included
-        for past_day in [1, 2, 3, 7]:
+        for past_day in [2, 3, 7]:
 
             # We define the corresponding past time indexs 
             pastIndexTrain = pd.to_datetime(indexTrain.loc[:, 'h' + str(hour)].values) - \
