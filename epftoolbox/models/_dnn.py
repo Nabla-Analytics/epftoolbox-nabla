@@ -847,8 +847,7 @@ def _build_and_split_XYs(dfTrain, features, shuffle_train, n_exogenous_inputs, d
 
         
     # Calculating the number of input features
-    n_features = features['In: Day'] + \
-        24 * features['In: Price D-1'] + 24 * features['In: Price D-2'] + \
+    n_features = features['In: Day'] + 24 * features['In: Price D-2'] + \
         24 * features['In: Price D-3'] + 24 * features['In: Price D-7']
 
     for n_ex in range(1, n_exogenous_inputs + 1):
