@@ -580,7 +580,7 @@ class DNN(object):
         """
 
         # We define the new training dataset considering the last calibration_window years of data 
-        df_train = df.loc[:next_day_date - pd.Timedelta(hours=1)]
+        df_train = df.loc[:next_day_date - pd.Timedelta(hours=1) - pd.Timedelta(days=1)]
         df_train = df_train.loc[next_day_date - pd.Timedelta(hours=self.calibration_window * 364 * 24):]
 
         # We define the test dataset as the next day (they day of interest) plus the last two weeks
